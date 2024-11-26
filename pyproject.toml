@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "python intern tech task"
+version = "0.1.0"
+description = ""
+authors = ["Roman Kovalchuk <kovalchuk.roman05@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.12"
+Flask = "^3.1.0"
+Flask-SQLAlchemy = "^3.1.1"
+SQLAlchemy = "^2.0.36"
+alembic = "^1.14.0"
+python-dotenv = "^1.0.1"
+psycopg2 = "^2.9.10"
+flask-jwt-extended = "^4.7.1"
+
+[tool.poetry.group.dev.dependencies]
+black = "^24.10.0"
+pytest = "^8.3.3"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
