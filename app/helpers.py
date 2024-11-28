@@ -1,10 +1,15 @@
 from functools import wraps
-from flask import request, jsonify
 from flask_jwt_extended import get_jwt_identity
 from sqlalchemy import select
 
 from core.models import User
 from core import db
+
+
+def get_user():
+    username = get_jwt_identity()
+    user = db.session.scalar(select(User).where(User.username == username))
+    return user
 
 
 def role_required(required_roles):
