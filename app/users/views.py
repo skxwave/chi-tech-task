@@ -2,7 +2,7 @@ from flask import Blueprint, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from sqlalchemy import select
 
-from ..helpers import role_required
+from ..helpers import role_required, get_user
 from core import db
 from core.models import User
 
@@ -59,6 +59,9 @@ def update_user(user_id):
     
     if not user:
         return {"msg": "user not found"}, 404
+    
+    if not data:
+        return {"msg": "fields missing"}, 400
     
     if "username" in data:
         user.username = data["username"]

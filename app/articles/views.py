@@ -4,6 +4,7 @@ from sqlalchemy import select
 
 from core import db
 from core.models import User, Article
+from ..helpers import get_user
 
 bp = Blueprint("articles", __name__)
 
@@ -18,11 +19,11 @@ def get_all_articles():
 @bp.route("", methods=["POST"])
 @jwt_required()
 def create_article():
-    username = get_jwt_identity()
-    user = db.session.scalar(select(User).where(User.username == username))
+    user = get_user()
     data = request.get_json()
-    if not data["title"] or not data["content"]:
-        return {"error": "Title and content are required"}, 400
+
+    if "title" not in data and "content" not in data:
+        return {"msg": "fields missing"}, 400
 
     article = Article(
         title=data["title"],
@@ -39,9 +40,9 @@ def create_article():
 @bp.route("/<int:article_id>", methods=["PUT"])
 @jwt_required()
 def update_article(article_id):
-    username = get_jwt_identity()
-    user = db.session.scalar(select(User).where(User.username == username))
+    user = get_user()
     article = db.session.scalar(select(Article).where(Article.id == article_id))
+    data = request.get_json()
 
     if not article:
         return {"msg": "article not found"}, 404
@@ -49,9 +50,13 @@ def update_article(article_id):
     if user.role == "user" and user.id != article_id:
         return {"msg": "access denied"}, 403
 
-    data = request.get_json()
-    article.title = data["title"]
-    article.content = data["content"]
+    if not data:
+        return {"msg": "fields missing"}, 400
+    if "title" in data:
+        article.title = data["title"]
+    if "content" in data:
+        article.content = data["content"]
+    
     db.session.commit()
 
     return {"msg": "article updated", "result": article.to_dict()}, 200
@@ -60,8 +65,7 @@ def update_article(article_id):
 @bp.route("/<int:article_id>", methods=["DELETE"])
 @jwt_required()
 def delete_article(article_id):
-    username = get_jwt_identity()
-    user = db.session.scalar(select(User).where(User.username == username))
+    user = get_user()
     article = db.session.scalar(select(Article).where(Article.id == article_id))
 
     if not article:
