@@ -16,13 +16,24 @@ def get_all_articles():
     return {"msg": [article.to_dict() for article in articles]}, 200
 
 
+@bp.route("/<int:article_id>", methods=["GET"])
+@jwt_required()
+def get_article_by_id(article_id):
+    article = db.session.scalar(select(Article).where(Article.id == article_id))
+
+    if not article:
+        return {"msg": "article not found"}, 404
+
+    return {"msg": article.to_dict()}, 200
+
+
 @bp.route("", methods=["POST"])
 @jwt_required()
 def create_article():
     user = get_user()
     data = request.get_json()
 
-    if "title" not in data and "content" not in data:
+    if "title" not in data or "content" not in data:
         return {"msg": "fields missing"}, 400
 
     article = Article(
@@ -34,7 +45,7 @@ def create_article():
     db.session.add(article)
     db.session.commit()
 
-    return {"msg": article.to_dict()}
+    return {"msg": article.to_dict()}, 201
 
 
 @bp.route("/<int:article_id>", methods=["PUT"])
