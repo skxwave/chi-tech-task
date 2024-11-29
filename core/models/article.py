@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING
 
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import ForeignKey, Text, DateTime
-from datetime import datetime
+from datetime import datetime, UTC
 
 from .base import Base
 from .mixins import IDMixin
@@ -16,7 +16,7 @@ class Article(IDMixin, Base):
 
     title: Mapped[str] = mapped_column(nullable=False)
     content: Mapped[str] = mapped_column(Text, nullable=False)
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now(UTC), nullable=False)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
 
     user: Mapped["User"] = relationship(back_populates="articles")
