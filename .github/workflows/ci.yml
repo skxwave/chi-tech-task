@@ -1,0 +1,29 @@
+name: CI test
+on:
+  push:
+    branches:
+      - "*"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+
+    - name: Install Poetry
+      run: |
+        pip install --upgrade pip
+        pip install poetry
+
+    - name: Install dependencies with Poetry
+      run: |
+        poetry install
+
+    - name: Run tests
+      run: |
+        poetry run pytest tests --maxfail=5 --disable-warnings
