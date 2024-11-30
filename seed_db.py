@@ -1,4 +1,5 @@
 from werkzeug.security import generate_password_hash
+from sqlalchemy.exc import IntegrityError
 
 from core.models import User, Article
 from core import db
@@ -18,11 +19,14 @@ def seed_data():
         Article(title="Editorial Review", content="Reviewed by editor", user_id=2),
     ]
 
-    db.session.bulk_save_objects(users)
-    db.session.bulk_save_objects(articles)
-    db.session.commit()
-
-    print("Database seeded successfully!")
+    try:
+        db.session.bulk_save_objects(users)
+        db.session.bulk_save_objects(articles)
+        db.session.commit()
+        print("Database seeded successfully!")
+    except IntegrityError:
+        db.session.rollback()
+        print("Data already exists, skipping...")
 
 if __name__ == "__main__":
     app = create_app()
