@@ -17,7 +17,7 @@ class User(IDMixin, Base):
     password: Mapped[str] = mapped_column(nullable=False)
     role: Mapped[str] = mapped_column(nullable=False)
 
-    articles: Mapped[list["Article"]] = relationship(back_populates="user", lazy="select")
+    articles: Mapped[list["Article"]] = relationship(back_populates="user", lazy="select", cascade="all,delete")
 
     def set_password(self, password):
         self.password = generate_password_hash(password)

@@ -20,6 +20,8 @@ flask-jwt-extended = "^4.7.1"
 [tool.poetry.group.dev.dependencies]
 black = "^24.10.0"
 pytest = "^8.3.3"
+pytest-mock = "^3.14.0"
+pytest-cov = "^6.0.0"
 
 [build-system]
 requires = ["poetry-core"]
