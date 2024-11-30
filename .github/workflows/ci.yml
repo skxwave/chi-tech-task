@@ -28,4 +28,4 @@ jobs:
 
     - name: Run tests
       run: |
-        poetry run pytest tests --maxfail=5 --disable-warnings
+        poetry run pytest tests --cov --maxfail=5 --disable-warnings
