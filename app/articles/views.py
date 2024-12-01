@@ -1,9 +1,9 @@
 from flask import Blueprint, request
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required
 from sqlalchemy import select
 
 from core import db
-from core.models import User, Article
+from core.models import Article
 from ..helpers import get_user
 
 bp = Blueprint("articles", __name__)

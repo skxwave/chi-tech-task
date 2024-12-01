@@ -1,8 +1,9 @@
 from flask import Blueprint, request
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required
 from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
 
-from ..helpers import role_required, get_user
+from ..helpers import role_required
 from core import db
 from core.models import User
 
@@ -47,7 +48,12 @@ def create_user():
     )
     user.set_password(data["password"])
 
-    return {"msg": "user created"}, 201
+    try:
+        db.session.add(user)
+        db.session.commit()
+        return {"msg": "user created"}, 201
+    except IntegrityError:
+        return {"msg": "user already exists"}, 409
 
 
 @bp.route("/<int:user_id>", methods=["PUT"])
@@ -56,13 +62,13 @@ def create_user():
 def update_user(user_id):
     data = request.get_json()
     user = db.session.scalar(select(User).where(User.id == user_id))
-    
+
     if not user:
         return {"msg": "user not found"}, 404
-    
+
     if not data:
         return {"msg": "fields missing"}, 400
-    
+
     if "username" in data:
         user.username = data["username"]
 
@@ -73,7 +79,7 @@ def update_user(user_id):
         user.set_password(data["password"])
 
     db.session.commit()
-        
+
     return {"msg": "user updated"}, 200
 
 
@@ -82,10 +88,10 @@ def update_user(user_id):
 @role_required(["admin"])
 def delete_user(user_id):
     user = db.session.scalar(select(User).where(User.id == user_id))
-    
+
     if not user:
         return {"msg": "user not found"}, 404
-    
+
     db.session.delete(user)
     db.session.commit()
 
