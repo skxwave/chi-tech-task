@@ -19,5 +19,3 @@ EXPOSE 5000
 COPY scripts/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
-
-CMD [ "poetry", "run", "flask", "run", "--host=0.0.0.0"]
