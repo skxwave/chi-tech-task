@@ -48,13 +48,17 @@ $ cp .env.template .env
 ```bash
 $ alembic upgrade head
 ```
-6. Seed db with admin user and some test data:
+6. Create admin user:
 ```bash
-$ python entrypoint.sh
+$ flask admin create_user
 ```
 7. Start the app:
 ```bash
 $ python main.py
+```
+8. (Optional) Seed db with admin user and some test data:
+```bash
+$ python seed_db.py
 ```
 
 ## Tests
