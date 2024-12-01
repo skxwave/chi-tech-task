@@ -15,7 +15,7 @@ class User(IDMixin, Base):
 
     username: Mapped[str] = mapped_column(nullable=False, unique=True)
     password: Mapped[str] = mapped_column(nullable=False)
-    role: Mapped[str] = mapped_column(nullable=False)
+    role: Mapped[str] = mapped_column(default="user")
 
     articles: Mapped[list["Article"]] = relationship(back_populates="user", lazy="select", cascade="all,delete")
 
