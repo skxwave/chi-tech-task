@@ -1,0 +1,304 @@
+swagger: "2.0"
+info:
+  title: "Bookstore API"
+  description: "API for managing a bookstore"
+  version: "0.1.0"
+securityDefinitions:
+  JWT:
+    type: apiKey
+    name: Authorization
+    in: header
+host: "127.0.0.1:5000"
+basePath: "/"
+schemes:
+  - "http"
+
+paths:
+  /api/v1/articles:
+    get:
+      tags:
+        - Articles
+      summary: Get a list of all articles
+      description: Retrieve all articles from the database.
+      security:
+        - JWT: []
+      responses:
+        200:
+          description: List of articles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    title:
+                      type: string
+                      example: "An article"
+                    content:
+                      type: string
+                      example: "Some content"
+                    user_id:
+                      type: integer
+                      example: 1
+
+    post:
+      tags:
+        - Articles
+      summary: Create a new article
+      description: Add a new article to the database.
+      security:
+        - JWT: []
+      parameters:
+        - in: body
+          name: article
+          description: Article to create.
+          schema:
+            type: object
+            required:
+              - title
+              - content
+            properties:
+              title:
+                type: string
+              content:
+                type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: "An article"
+                content:
+                  type: string
+                  example: "Some content"
+      responses:
+        201:
+          description: Article created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  title:
+                    type: string
+                    example: "An article"
+                  content:
+                    type: string
+                    example: "Some content"
+                  user_id:
+                    type: integer
+                    example: 1
+        400:
+          description: Invalid input
+
+  /api/v1/articles/{id}:
+    get:
+      tags:
+        - Articles
+      summary: Get details of a specific article
+      description: Retrieve details of an article by its ID.
+      security:
+        - JWT: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID of the article to retrieve
+      responses:
+        200:
+          description: Article details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  title:
+                    type: string
+                    example: "An article"
+                  content:
+                    type: string
+                    example: "Some content"
+                  user_id:
+                    type: integer
+                    example: 1
+        404:
+          description: Book not found
+
+    put:
+      tags:
+        - Articles
+      summary: Update an article
+      description: Update details of an article by its ID.
+      security:
+        - JWT: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID of the article to update
+        - in: body
+          name: article
+          description: Article to update.
+          schema:
+            type: object
+            required:
+              - title
+              - content
+            properties:
+              title:
+                type: string
+              content:
+                type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: "An article"
+                content:
+                  type: string
+                  example: "Some content"
+      responses:
+        200:
+          description: Article updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  title:
+                    type: string
+                    example: "An article"
+                  content:
+                    type: string
+                    example: "Some content"
+                  user_id:
+                    type: integer
+                    example: 1
+        400:
+          description: Invalid input
+        404:
+          description: Article not found
+
+    delete:
+      tags:
+        - Articles
+      summary: Delete an article
+      description: Delete an article by its ID.
+      security:
+        - JWT: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID of the article to delete
+      responses:
+        200:
+          description: Article deleted successfully
+        404:
+          description: Article not found
+
+  /api/v1/auth/login:
+      post:
+        tags:
+          - Auth
+        summary: User Login
+        parameters:
+          - in: body
+            name: user
+            description: User credentials.
+            schema:
+              type: object
+              required:
+                - username
+                - password
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  username:
+                    type: string
+                    example: "User1"
+                  password:
+                    type: string
+                    example: "superpassword"
+        responses:
+          200:
+            description: Login success
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    username:
+                      type: string
+                      example: "User1"
+                    password:
+                      type: string
+                      example: "superpassword"
+          400:
+            description: Username and password required
+          404:
+            description: User doesn't exist
+          401:
+            description: Bad username or password
+
+  /user/profile:
+      get:
+        tags:
+          - User
+        summary: User Profile
+        security:
+          - JWT: []
+        responses:
+          200:
+            description: OK
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    username:
+                      type: string
+                      example: "User1"
