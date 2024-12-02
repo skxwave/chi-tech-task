@@ -1,4 +1,4 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, current_app
 from flask_jwt_extended import jwt_required
 from sqlalchemy import select
 
@@ -12,8 +12,20 @@ bp = Blueprint("articles", __name__)
 @bp.route("", methods=["GET"])
 @jwt_required()
 def get_all_articles():
-    articles = db.session.scalars(select(Article)).all()
-    return {"msg": [article.to_dict() for article in articles]}, 200
+    page = request.args.get('page', 1, type=int)
+
+    if page <= 0:
+        return {"msg": "page should be > 0"}
+
+    query = db.session.query(Article)
+    total_items = query.count()
+    per_page = current_app.config["PAGE_SIZE"]
+    articles = query.offset((page - 1) * per_page).limit(per_page).all()
+    return {
+        "page": page,
+        "total_items": total_items,
+        "data": [article.to_dict() for article in articles]
+    }, 200
 
 
 @bp.route("/<int:article_id>", methods=["GET"])

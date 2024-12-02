@@ -1,4 +1,4 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, current_app
 from flask_jwt_extended import jwt_required
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
@@ -11,10 +11,22 @@ bp = Blueprint("users", __name__)
 
 
 @bp.route("", methods=["GET"])
-@jwt_required()
+# @jwt_required()
 def get_all_users():
-    users = db.session.scalars(select(User)).all()
-    return {"msg": [user.to_dict() for user in users]}, 200
+    page = request.args.get('page', 1, type=int)
+
+    if page <= 0:
+        return {"msg": "page should be > 0"}
+
+    query = db.session.query(User)
+    total_items = query.count()
+    per_page = current_app.config["PAGE_SIZE"]
+    users = query.offset((page - 1) * per_page).limit(per_page).all()
+    return {
+        "page": page,
+        "total_items": total_items,
+        "data": [user.to_dict() for user in users]
+    }, 200
 
 
 @bp.route("/search", methods=["GET"])
