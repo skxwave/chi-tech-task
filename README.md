@@ -3,18 +3,29 @@ This is a Flask-based REST API that provides a role-based permission system, use
 
 ## Features
 
-1. Role-based permissions
-2. JWT Authentication. Only admin can create new users
-3. Postgresql with SQLAlchemy ORM
-4. Swagger docs using [Flasgger](https://github.com/flasgger/flasgger)
+1. **Role-based** permissions
+2. **JWT Authentication**
+3. PostgreSQL with **SQLAlchemy ORM**
+4. Swagger docs using **[Flasgger](https://github.com/flasgger/flasgger)**
 5. Tests using Pytest. Coverage >80%
-6. Fully containerized using Docker and Docker compose
+6. Fully containerized using **Docker** and **Docker compose**
+
+## Requirements
+
+- Docker
+- Python ^3.12
+- PostgreSQL
+- Poetry
 
 ## Getting started with Docker
 
 1. Clone the repository:
 ```bash
 $ git clone https://github.com/skxwave/chi-tech-task.git
+```
+2. Copy ```.env.template``` and set up your environment variables:
+```bash
+$ cp .env.template .env
 ```
 2. Build and raise container:
 ```bash
@@ -32,7 +43,9 @@ $ cd chi-tech-task
 ```bash
 $ python -m venv .venv
 $ .\.venv\Scripts\activate
-$ # for linux
+```
+For linux users:
+```bash
 $ source .venv/bin/activate
 ```
 3. Install poetry and dependencies:
@@ -40,7 +53,7 @@ $ source .venv/bin/activate
 $ pip install poetry
 $ poetry install
 ```
-4. Copy .env.template and set your values:
+4. Copy ```.env.template``` and set up your environment variables:
 ```bash
 $ cp .env.template .env
 ```
@@ -52,13 +65,13 @@ $ alembic upgrade head
 ```bash
 $ flask admin create_user
 ```
-7. Start the app:
+7. (Optional) Seed db with sample data:
+```bash
+$ flask admin seed_db
+```
+8. Start the app:
 ```bash
 $ python main.py
-```
-8. (Optional) Seed db with admin user and some test data:
-```bash
-$ python seed_db.py
 ```
 
 ## Tests
