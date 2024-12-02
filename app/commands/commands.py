@@ -14,11 +14,11 @@ bp = Blueprint("admin", __name__)
 @click.option("--username", required=True)
 @click.option("--password", required=True)
 @click.option("--role", required=True)
-def create_user():
-    username = input("Username: ")
-    password = input("Password: ")
-    role = input("Role: ")
-
+def create_user(
+    username,
+    password,
+    role,
+):
     user = User(
         username=username,
         role=role,

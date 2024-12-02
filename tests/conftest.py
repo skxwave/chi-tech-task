@@ -21,18 +21,31 @@ def create_user(username, role):
     return user
 
 
-@pytest.fixture(scope="module")
-def test_client():
+@pytest.fixture(scope="package")
+def app():
     config = Config()
     config.SQLALCHEMY_DATABASE_URI = "sqlite:///"
     config.TESTING = True
 
     app = create_app(config_class=config)
+    return app
+
+
+@pytest.fixture(scope="module")
+def test_client(app):
     with app.app_context():
         with app.test_client() as client:
             Base.metadata.create_all(bind=db.engine)
             yield client
             Base.metadata.drop_all(bind=db.engine)
+
+
+@pytest.fixture(scope="module")
+def runner(app):
+    with app.app_context():
+        Base.metadata.create_all(bind=db.engine)
+        yield app.test_cli_runner()
+        Base.metadata.drop_all(bind=db.engine)
 
 
 @pytest.fixture(scope="function")
