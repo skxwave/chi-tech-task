@@ -7,7 +7,7 @@ def test_get_all_users(test_client):
     response = test_client.get("/api/v1/users", headers={"Authorization": f"Bearer {token}"})
 
     assert response.status_code == 200
-    assert isinstance(response.json["msg"], list)
+    assert isinstance(response.json["data"], list)
 
 
 def test_get_one_user(test_client, mock_user):

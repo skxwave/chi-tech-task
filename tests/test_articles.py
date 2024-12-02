@@ -17,7 +17,7 @@ def test_get_articles(test_client, mock_user):
     response = test_client.get(f"/api/v1/articles", headers={"Authorization": f"Bearer {token}"})
 
     assert response.status_code == 200
-    assert isinstance(response.json["msg"], list)
+    assert isinstance(response.json["data"], list)
 
 
 def test_create_article(test_client, mock_user):
