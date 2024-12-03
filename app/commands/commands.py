@@ -25,6 +25,10 @@ def create_user(
     )
     user.set_password(password)
 
+    if role not in ["admin", "editor", "user"]:
+        print("User role is invalid"), 422
+        return
+
     try:
         db.session.add(user)
         db.session.commit()

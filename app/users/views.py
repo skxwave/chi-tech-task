@@ -54,6 +54,10 @@ def find_user(user_id):
 @role_required(["admin"])
 def create_user():
     data = request.get_json()
+
+    if data["role"] not in ["admin", "editor", "user"]:
+        return {"msg": "invalid role"}, 422
+    
     user = User(
         username=data["username"],
         role=data["role"],
