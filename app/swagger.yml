@@ -21,6 +21,17 @@ paths:
       description: Retrieve all articles from the database.
       security:
         - JWT: []
+      parameters:
+        - in: query
+          name: Page
+          description: Page number.
+          schema:
+            type: object
+            required:
+              - page
+            properties:
+              page:
+                type: integer
       responses:
         200:
           description: List of articles
@@ -360,6 +371,17 @@ paths:
       description: Retrieve all users from the database.
       security:
         - JWT: []
+      parameters:
+        - in: query
+          name: Page
+          description: Page number.
+          schema:
+            type: object
+            required:
+              - page
+            properties:
+              page:
+                type: integer
       responses:
         200:
           description: List of users
